@@ -3,6 +3,7 @@ package com.links.login;
 import com.links.login.exceptions.CredentialsException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,8 +11,9 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
     private final LoginService loginService;
 
-    public LoginController() {
-        loginService = new LoginService();
+    @Autowired
+    public LoginController(LoginService loginService) {
+        this.loginService = loginService;
     }
 
     @Operation(summary = "Get all users",
@@ -48,11 +50,11 @@ public class LoginController {
 
     @Operation(summary = "Delete a user",
             description = "Returns a message indicating whether the user was deleted or not")
-    @DeleteMapping("/user/{id}")
-    public ResponseEntity<String> deleteUser(@Parameter(description = "The id of the user to be deleted",required = true)
-                                             @PathVariable long id) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteUser(@Parameter(description = "The user to be deleted",required = true)
+                                             @RequestBody User user) {
         try {
-            return ResponseEntity.ok(loginService.deleteUser(id));
+            return ResponseEntity.ok(loginService.deleteUser(user));
         } catch (CredentialsException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

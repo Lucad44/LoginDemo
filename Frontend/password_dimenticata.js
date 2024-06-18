@@ -28,6 +28,7 @@ document.getElementById('resetForm').addEventListener('submit', function(event) 
         },
         body: JSON.stringify(data)
     }).then(response => {
+        console.log("ok");
         if (response.ok) {
             console.log('Password reset successful');
             displayOutcome(successMessage, true);
