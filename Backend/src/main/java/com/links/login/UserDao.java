@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class UserDao {
@@ -44,6 +43,11 @@ public class UserDao {
         jdbcTemplate.update(sql, newUsername, user.getUsername());
     }
 
+    public void updatePassword(String username, String newPassword) {
+        String sql = "UPDATE users SET password = ? WHERE username = ?";
+        jdbcTemplate.update(sql, newPassword, username);
+    }
+
     public boolean containsUser(User user) {
         if (user == null) {
             return false;
@@ -51,10 +55,17 @@ public class UserDao {
         return findUser(user.getUsername()) != null;
     }
 
+    public boolean containsUser(String username) {
+        if (username == null) {
+            return false;
+        }
+        return findUser(username) != null;
+    }
+
     public User findUser(String username) {
         try {
             String sql = "SELECT * FROM users WHERE username = ?";
-            return jdbcTemplate.queryForObject(sql, new Object[]{username}, new BeanPropertyRowMapper<User>(User.class));
+            return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), username).getFirst();
         } catch (Exception e) {
             logger.error("Failed to find user {}: {}", username, e.getMessage());
             return null;

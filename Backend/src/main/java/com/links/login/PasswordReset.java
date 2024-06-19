@@ -1,8 +1,12 @@
 package com.links.login;
 
+import lombok.Getter;
+
 public class PasswordReset {
+    @Getter
     private final String username;
 
+    @Getter
     private final String newPassword;
 
     private final String confirmPassword;
@@ -11,14 +15,6 @@ public class PasswordReset {
         this.username = username;
         this.newPassword = newPassword;
         this.confirmPassword = confirmPassword;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getNewPassword() {
-        return newPassword;
     }
 
     public boolean passwordsMatch() {

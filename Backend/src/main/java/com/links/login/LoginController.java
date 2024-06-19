@@ -3,7 +3,9 @@ package com.links.login;
 import com.links.login.exceptions.CredentialsException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,11 +44,12 @@ public class LoginController {
         }
     }
 
+    @CrossOrigin(origins = "*")
     @Operation(summary = "Update a user's username",
             description = "Returns a message indicating whether the username was updated or not")
     @PutMapping("/update")
     public ResponseEntity<String> updateUser(@Parameter(description = "The user to be updated",required = true)
-                                             @RequestBody ChangeUsername changeUsername) {
+                                             @RequestBody ChangeUsername changeUsername, HttpSession session) {
         try {
             return ResponseEntity.ok(loginService.updateUser(changeUsername));
         } catch (CredentialsException e) {
@@ -54,13 +57,13 @@ public class LoginController {
         }
     }
 
+    @CrossOrigin(origins = "*")
     @Operation(summary = "Delete a user",
             description = "Returns a message indicating whether the user was deleted or not")
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteUser(@Parameter(description = "The user to be deleted",required = true)
-                                             @RequestBody User user) {
+    public ResponseEntity<String> deleteUser() {
         try {
-            return ResponseEntity.ok(loginService.deleteUser(user));
+            return ResponseEntity.ok(loginService.deleteUser());
         } catch (CredentialsException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

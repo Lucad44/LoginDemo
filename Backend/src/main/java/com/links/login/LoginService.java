@@ -1,6 +1,7 @@
 package com.links.login;
 
 import com.links.login.exceptions.*;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,12 @@ import java.util.List;
 @Service
 public class LoginService {
 
+
     private static final String UNF = "User non trovato";
+
     private static final Logger logger = LoggerFactory.getLogger(LoginService.class);
+
+    private User currentUser = null;
 
     private final UserDao userDao;
 
@@ -48,38 +53,42 @@ public class LoginService {
         return ret;
     }
 
-    public String updateUser(ChangeUsername changeUsername) throws LoginException, EmptyUsernameException, UserAlreadyExistsException {
-        User user = changeUsername.user();
-        try {
-            login(user);
-        } catch (LoginException e) {
-            throw new LoginException("Login failed");
+    public String updateUser(ChangeUsername changeUsername) throws EmptyUsernameException, UserAlreadyExistsException, LoginException, UsernamesDoNotMatchException {
+        if (currentUser == null) {
+            logger.error("User failed to change username, login required");
+            throw new LoginException("Login required");
+        }
+        long currentId = currentUser.getId();
+        if (!changeUsername.usernamesMatch()) {
+            logger.error("User {} failed to change username, usernames do not match", currentUser.getId());
+            throw new UsernamesDoNotMatchException("Passwords do not match");
         }
         String newUsername = changeUsername.newUsername();
         if (newUsername == null) {
-            logger.error("User {} failed to change username, empty username", user.getId());
+            logger.error("User {} failed to change username, empty username", currentId);
             throw new EmptyUsernameException("Empty username");
         }
-        if (userDao.containsUser(user)) {
-            logger.error("User {} failed to change username to {}, user already exists", user.getId(), newUsername);
+        if (userDao.containsUser(newUsername)) {
+            logger.error("User {} failed to change username to {}, user already exists", currentId, newUsername);
             throw new UserAlreadyExistsException("User already exists");
         }
-        userDao.updateUser(user, newUsername);
-        logger.info("User {} changed username to {}", user.getId(), newUsername);
+        userDao.updateUser(currentUser, newUsername);
+        currentUser.setUsername(newUsername);
+        logger.info("User {} changed username to {}", currentUser, newUsername);
         return "Username updated successfully to " + newUsername;
     }
 
-    public String deleteUser(User user) throws LoginException {
-        try {
-            login(user);
-        } catch (LoginException e) {
-            throw new LoginException("Login failed");
+    public String deleteUser() throws LoginException {
+        if (currentUser == null) {
+            logger.error("User failed to delete account, login required");
+            throw new LoginException("Login required");
         }
-        if (!userDao.removeUser(user)) {
-            logger.error("Attempted to remove non-existing user: {}", user);
+        if (!userDao.removeUser(currentUser)) {
+            logger.error("Attempted to remove non-existing user: {}", currentUser);
             throw new UserNotFoundException(UNF);
         }
-        String ret = "User deleted: " + user;
+        String ret = "User deleted: " + currentUser;
+        currentUser = null;
         logger.info(ret);
         return ret;
     }
@@ -98,6 +107,7 @@ public class LoginService {
             logger.error("User {} attempted login, incorrect password", user.getId());
             throw new WrongPasswordException("Incorrect password");
         }
+        currentUser = user;
         logger.info("User {} logged in successfully", user.getId());
         return "Login successful";
     }
@@ -108,7 +118,7 @@ public class LoginService {
             throw new PasswordDoNotMatchException("Passwords do not match");
         }
         User user = userDao.findUser(passwordReset.getUsername());
-        if (user == null || !userDao.containsUser(user)) {
+        if (!userDao.containsUser(user)) {
             logger.error("User {} failed to reset password, user not found", passwordReset.getUsername());
             throw new UserNotFoundException(UNF);
         }
@@ -116,6 +126,7 @@ public class LoginService {
             logger.error("User {} failed to reset password, invalid password", passwordReset.getUsername());
             throw new PasswordNotValidException("Invalid password");
         }
+        userDao.updatePassword(passwordReset.getUsername(), passwordReset.getNewPassword());
         logger.info("User {} reset password", user.getId());
         return "Password updated successfully";
     }
