@@ -61,15 +61,8 @@ public class UserDao {
         }
     }
 
-    @Override
-    public String toString() {
-        try {
-            String sql = "SELECT * FROM users";
-            List<User> ret = Objects.requireNonNull(jdbcTemplate.query(sql, new BeanPropertyRowMapper<User>(User.class)));
-            return ret.toString();
-        } catch (Exception e) {
-            logger.error("Failed to get users: {}", e.getMessage());
-            return "No users found";
-        }
+    public List<User> getUserList() {
+        String sql = "SELECT * FROM users";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class));
     }
 }

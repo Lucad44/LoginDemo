@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LoginService {
 
@@ -19,8 +21,8 @@ public class LoginService {
         this.userDao = userDao;
     }
 
-    public String getUserList() {
-        return userDao.toString();
+    public List<User> getUserList() {
+        return userDao.getUserList();
     }
 
     public String createUser(RegisterUser registerUser) throws EmptyUsernameException, PasswordDoNotMatchException, PasswordNotValidException, UserAlreadyExistsException {

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class LoginController {
     private final LoginService loginService;
@@ -19,8 +21,12 @@ public class LoginController {
     @Operation(summary = "Get all users",
             description = "Returns a list of all users")
     @GetMapping("/users")
-    public String getUserList() {
-        return loginService.getUserList();
+    public ResponseEntity<List<User>> getUserList() {
+        try {
+            return ResponseEntity.ok(loginService.getUserList());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
     @CrossOrigin(origins = "*")

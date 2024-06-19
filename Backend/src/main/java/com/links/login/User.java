@@ -1,15 +1,10 @@
 package com.links.login;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -19,8 +14,6 @@ public class User {
     private String password;
 
     public User() {
-        this.username = "";
-        this.password = "";
     }
 
     public User(String username, String password) {
@@ -80,6 +73,14 @@ public class User {
         int result = username.hashCode();
         result = 31 * result + password.hashCode();
         return result;
+    }
+
+    public long calculateId() {
+        long hash = 5381;
+        for (char c : username.toCharArray()) {
+            hash = ((hash << 5) + hash) + c;
+        }
+        return hash;
     }
 
     public boolean passwordMatch(User user) {
