@@ -10,8 +10,8 @@ import lombok.ToString;
 @Table(name = "usersjpa")
 @Getter
 @Setter
-@NoArgsConstructor
 @ToString
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    protected User(String username, String password) {
+    @Column(nullable = false)
+    private String role = Role.ADMIN;
+
+    public User(String username, String password) {
         this.username = username;
         setPassword(password);
     }
@@ -70,6 +73,9 @@ public class User {
     }
 
     private boolean isPasswordValid(String password) {
+        if (Role.ADMIN.equals(role)) {
+            return true;
+        }
         if (password.length() < 8 || password.length() > 24) {
             return false;
         }

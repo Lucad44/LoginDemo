@@ -72,4 +72,8 @@ public class UserDao {
     public List<User> getUserList() {
         return userRepository.findAll();
     }
+
+    public String getUserRole(String username) {
+        return userRepository.findRoleByUsername(username);
+    }
 }

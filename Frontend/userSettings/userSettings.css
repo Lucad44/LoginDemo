@@ -153,3 +153,29 @@ input[type="password"]:focus {
     background-color: #ff0000;
     transform: scale(1.05);
 }
+
+.btn-tertiary {
+    background-color: #45c631;
+    color: white;
+    border: none;
+}
+
+.btn-tertiary:hover {
+    background-color: #45c631;
+    transform: scale(1.05);
+}
+
+.top-right-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.top-right-button img {
+    width: 64px;
+    height: 64px;
+}

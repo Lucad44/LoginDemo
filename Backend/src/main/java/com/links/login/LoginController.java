@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class LoginController {
@@ -19,6 +22,7 @@ public class LoginController {
         this.loginService = loginService;
     }
 
+    @CrossOrigin(origins = "*")
     @Operation(summary = "Get all users",
             description = "Returns a list of all users")
     @GetMapping("/users")
@@ -60,9 +64,9 @@ public class LoginController {
     @Operation(summary = "Delete a user",
             description = "Returns a message indicating whether the user was deleted or not")
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteUser() {
+    public ResponseEntity<String> deleteUser(@RequestBody User user) {
         try {
-            return ResponseEntity.ok(loginService.deleteUser());
+            return ResponseEntity.ok(loginService.deleteUser(user));
         } catch (CredentialsException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -72,12 +76,17 @@ public class LoginController {
     @Operation(summary = "Login a user",
             description = "Returns a message indicating whether the user was logged in or not")
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Parameter(description = "The user to be logged in",required = true)
+    public ResponseEntity<Map<String, Object>> login(@Parameter(description = "The user to be logged in",required = true)
                                         @RequestBody User user) {
         try {
-            return ResponseEntity.ok(loginService.login(user));
+            String loginMessage = loginService.login(user);
+            String role = user.getRole();
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", loginMessage);
+            response.put("role", role);
+            return ResponseEntity.ok(response);
         } catch (CredentialsException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
         }
     }
 

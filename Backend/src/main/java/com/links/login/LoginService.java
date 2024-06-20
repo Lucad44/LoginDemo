@@ -28,16 +28,21 @@ public class LoginService {
         return userDao.getUserList();
     }
 
-    public String createUser(RegisterUser registerUser) throws EmptyUsernameException, PasswordDoNotMatchException, PasswordNotValidException, UserAlreadyExistsException {
+    public String createUser(RegisterUser registerUser) throws EmptyUsernameException, PasswordDoNotMatchException, PasswordNotValidException, UserAlreadyExistsException, ForbiddenNameException {
         User user = registerUser.getUser();
         if (user == null || user.getUsername() == null) {
             logger.error("Failed to create a new user, invalid or empty username");
             throw new EmptyUsernameException("Username is empty or invalid");
         }
+        if (!Role.ADMIN.equals(user.getRole()) && Role.contains(user.getUsername())) {
+            logger.error("User {} failed to create a new user, username forbidden", user.getId());
+            throw new ForbiddenNameException("Username forbidden");
+        }
         if (!registerUser.passwordsMatch()) {
             logger.error("User {} failed to create a new user, passwords do not match", user.getId());
             throw new PasswordDoNotMatchException("Passwords do not match");
         }
+        user.setRole(userDao.getUserRole(user.getUsername()));
         if (!user.setPassword(user.getPassword())) {
             logger.error("User {} failed to create a new user, invalid password", user.getId());
             throw new PasswordNotValidException("Invalid password");
@@ -76,7 +81,8 @@ public class LoginService {
         return "Username updated successfully to " + newUsername;
     }
 
-    public String deleteUser() throws LoginException {
+    public String deleteUser(User user) throws LoginException {
+        currentUser = user;
         if (currentUser == null) {
             logger.error("User failed to delete account, login required");
             throw new LoginException("Login required");
@@ -105,6 +111,7 @@ public class LoginService {
             logger.error("User {} attempted login, incorrect password", user.getId());
             throw new WrongPasswordException("Incorrect password");
         }
+        user.setRole(userDao.getUserRole(user.getUsername()));
         currentUser = user;
         logger.info("User {} logged in successfully", user.getId());
         return "Login successful";
