@@ -76,4 +76,11 @@ public class UserDao {
     public String getUserRole(String username) {
         return userRepository.findRoleByUsername(username);
     }
+
+    public void suspendUser(User user) {
+        if (user != null) {
+            user.setRole(Role.SUSPENDED);
+            userRepository.save(user);
+        }
+    }
 }

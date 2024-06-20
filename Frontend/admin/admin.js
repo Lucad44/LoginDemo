@@ -18,14 +18,26 @@ document.getElementById('deleteButton').addEventListener('click', function() {
 });
 
 // Placeholder functions for submit actions
-function updateUser() {
+function suspendUser() {
     const username = document.getElementById('updateUsername').value;
     alert(`Sospendi utente: ${username}`);
     closePopup('updatePopup');
 }
 
 function deleteUser() {
-    const username = document.getElementById('deleteUsername').value;
-    alert(`Elimina utente: ${username}`);
-    closePopup('deletePopup');
+    fetch('http://localhost:8080/delete', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
+    }).then(response => {
+        if (response.ok) {
+            console.log('Form submitted successfully');
+        } else {
+            console.error('Form submission error');
+        }
+    }).catch(error => {
+        console.error('Form submission error:', error);
+    });
 }

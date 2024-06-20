@@ -102,4 +102,16 @@ public class LoginController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @CrossOrigin(origins = "*")
+    @Operation(summary = "Suspend a user",
+            description = "Returns a message indicating whether the user was suspended or not")
+    @PutMapping("/suspend")
+    public ResponseEntity<String> suspendUser(@RequestBody User user) {
+        try {
+            return ResponseEntity.ok(loginService.suspendUser(user));
+        } catch (CredentialsException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

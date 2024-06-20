@@ -135,4 +135,14 @@ public class LoginService {
         logger.info("User {} reset password", user.getId());
         return "Password updated successfully";
     }
+
+    public String suspendUser(User user) throws LoginException {
+        if (user == null || !userDao.containsUser(user)) {
+            logger.error("Admin failed to suspend user, user not found");
+            throw new UserNotFoundException(UNF);
+        }
+        userDao.suspendUser(user);
+        logger.info("User {} suspended", user.getId());
+        return "User suspended successfully";
+    }
 }
