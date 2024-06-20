@@ -1,7 +1,6 @@
 package com.links.login;
 
 import com.links.login.exceptions.*;
-import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import java.util.List;
 
 @Service
 public class LoginService {
-
 
     private static final String UNF = "User non trovato";
 

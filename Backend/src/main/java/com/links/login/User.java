@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "users")
+@Table(name = "usersjpa")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,11 +17,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(nullable = false)
     private String password;
 
-    public User(String username, String password) {
+    protected User(String username, String password) {
         this.username = username;
         setPassword(password);
     }
