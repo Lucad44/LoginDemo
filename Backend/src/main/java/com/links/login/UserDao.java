@@ -29,7 +29,7 @@ public class UserDao {
         if (!containsUser(user)) {
             return false;
         }
-        userRepository.delete(user);
+        userRepository.deleteByUsername(user.getUsername());
         return true;
     }
 
@@ -79,8 +79,23 @@ public class UserDao {
 
     public void suspendUser(User user) {
         if (user != null) {
-            user.setRole(Role.SUSPENDED);
+            user.setSuspended(true);
             userRepository.save(user);
         }
+    }
+
+    public void unsuspendUser(User user) {
+        if (user != null) {
+            user.setSuspended(false);
+            userRepository.save(user);
+        }
+    }
+
+    public boolean isUserSuspended(String username) {
+        return userRepository.isUserSuspended(username);
+    }
+
+    public String objectToUsername(String object) {
+        return object.substring(13, object.length() - 2);
     }
 }

@@ -64,9 +64,9 @@ public class LoginController {
     @Operation(summary = "Delete a user",
             description = "Returns a message indicating whether the user was deleted or not")
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteUser(@RequestBody User user) {
+    public ResponseEntity<String> deleteUser(@RequestBody String username) {
         try {
-            return ResponseEntity.ok(loginService.deleteUser(user));
+            return ResponseEntity.ok(loginService.deleteUser(username));
         } catch (CredentialsException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -107,9 +107,21 @@ public class LoginController {
     @Operation(summary = "Suspend a user",
             description = "Returns a message indicating whether the user was suspended or not")
     @PutMapping("/suspend")
-    public ResponseEntity<String> suspendUser(@RequestBody User user) {
+    public ResponseEntity<String> suspendUser(@RequestBody String username) {
         try {
-            return ResponseEntity.ok(loginService.suspendUser(user));
+            return ResponseEntity.ok(loginService.suspendUser(username));
+        } catch (CredentialsException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @CrossOrigin(origins = "*")
+    @Operation(summary = "Unsuspend a user",
+            description = "Returns a message indicating whether the user was unsuspended or not")
+    @PutMapping("/unsuspend")
+    public ResponseEntity<String> unsuspendUser(@RequestBody String username) {
+        try {
+            return ResponseEntity.ok(loginService.unsuspendUser(username));
         } catch (CredentialsException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

@@ -9,7 +9,9 @@ public class Role {
 
     public static final String SUSPENDED = "suspended";
 
-    private static final Set<String> roles = Set.of(ADMIN, USER, SUSPENDED);
+    public static final String NULL = "null";
+
+    private static final Set<String> roles = Set.of(ADMIN, USER, SUSPENDED, NULL);
 
     private Role() {
     }

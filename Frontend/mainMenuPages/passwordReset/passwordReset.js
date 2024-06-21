@@ -32,8 +32,13 @@ document.getElementById('resetForm').addEventListener('submit', function(event) 
             console.log('Password reset successful');
             displayOutcome(successMessage, true);
         } else {
-            response.json().then(errorData => {
-                displayOutcome(errorData.message || errorMessage, false);
+            response.text().then(text => {
+                try {
+                    const errorData = JSON.parse(text);
+                    displayOutcome(errorData.message || errorMessage, false);
+                } catch (e) {
+                    displayOutcome(text || errorMessage, false);
+                }
             }).catch(() => {
                 displayOutcome(errorMessage, false);
             });

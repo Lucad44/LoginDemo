@@ -21,7 +21,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
         console.dir(d);
         console.log('Form submitted successfully');
         if (d.role === 'admin') {
-            window.location.replace("../../admin.html");
+            window.location.replace("../../admin/admin.html");
         } else {
             window.location.replace("../success.html");
         }

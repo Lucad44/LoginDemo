@@ -7,7 +7,7 @@ deleteButton.addEventListener('click', function(event) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({})
+        body: JSON.stringify(null)
     }).then(response => {
         if (response.ok) {
             console.log('Form submitted successfully');

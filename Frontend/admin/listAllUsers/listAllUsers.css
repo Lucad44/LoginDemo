@@ -1,0 +1,13 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    height: 100vh;
+    color: #333;
+}
+
+.user {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 5px;
+    white-space: pre-wrap; /* Ensure proper formatting for JSON */
+    background-color: #f9f9f9; /* Light background for better readability */
+}

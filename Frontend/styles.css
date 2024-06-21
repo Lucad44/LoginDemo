@@ -10,8 +10,8 @@
 
 body {
     font-family: 'Roboto', sans-serif;
-    background: rgb(34,94,195);
-    background: radial-gradient(circle, rgba(34,94,195,1) 0%, rgba(253,170,45,1) 100%);
+    background: rgb(238,174,202);
+    background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
     display: flex;
     justify-content: center;
     align-items: center;

@@ -32,8 +32,16 @@ document.getElementById('registerForm').addEventListener('submit', function(even
             console.log('Registration successful');
             displayOutcome(successMessage, true);
         } else {
-            response.json().then(errorData => {
-                displayOutcome(errorData.message || errorMessage, false);
+            // Check if the response is JSON or text
+            response.text().then(text => {
+                try {
+                    // Try to parse JSON
+                    const errorData = JSON.parse(text);
+                    displayOutcome(errorData.message || errorMessage, false);
+                } catch (e) {
+                    // If parsing fails, assume it is plain text
+                    displayOutcome(text || errorMessage, false);
+                }
             }).catch(() => {
                 displayOutcome(errorMessage, false);
             });

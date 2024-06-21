@@ -12,30 +12,41 @@
 <a href="../userSettings/userSettings.html" class="top-right-button">
     <img src="../images/cog.png" alt="User settings">
 </a>
-<div class="card">
+<div class="admin-container">
     <h1>Admin page</h1>
     <div class="buttons">
         <a id="listAllButton" href="listAllUsers/listAllUsers.html" class="btn btn-tertiary">Mostra tutti gli utenti</a>
-        <button id="updateButton" class="btn btn-primary">Sospendi utente</button>
+        <button id="suspendButton" class="btn btn-primary">Sospendi utente</button>
+        <button id="unsuspendButton" class="btn btn-primary">Riattiva utente</button>
         <button id="deleteButton" class="btn btn-secondary">Elimina utente</button>
     </div>
 </div>
 
-<!-- Update User Popup -->
-<div id="updatePopup" class="overlay">
+<div id="suspendPopup" class="overlay">
     <div class="popup">
         <h2>Sospendi utente</h2>
-        <input type="text" id="updateUsername" placeholder="Enter username">
+        <input type="text" id="suspendUsername" placeholder="Enter username">
+        <div id="suspendMessage"></div>
         <button onclick="suspendUser()">Submit</button>
-        <button class="close-btn" onclick="closePopup('updatePopup')">Close</button>
+        <button class="close-btn" onclick="closePopup('suspendPopup')">Close</button>
     </div>
 </div>
 
-<!-- Delete User Popup -->
+<div id="unsuspendPopup" class="overlay">
+    <div class="popup">
+        <h2>Riattiva utente</h2>
+        <input type="text" id="unsuspendUsername" placeholder="Enter username">
+        <div id="unsuspendMessage"></div>
+        <button onclick="unsuspendUser()">Submit</button>
+        <button class="close-btn" onclick="closePopup('unsuspendPopup')">Close</button>
+    </div>
+</div>
+
 <div id="deletePopup" class="overlay">
     <div class="popup">
         <h2>Elimina utente</h2>
         <input type="text" id="deleteUsername" placeholder="Enter username">
+        <div id="deleteMessage"></div>
         <button onclick="deleteUser()">Submit</button>
         <button class="close-btn" onclick="closePopup('deletePopup')">Close</button>
     </div>

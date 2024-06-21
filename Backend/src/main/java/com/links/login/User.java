@@ -26,6 +26,9 @@ public class User {
     @Column(nullable = false)
     private String role = Role.ADMIN;
 
+    @Column(nullable = false)
+    private boolean suspended = false;
+
     public User(String username, String password) {
         this.username = username;
         setPassword(password);

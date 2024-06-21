@@ -7,11 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class LoginService {
 
-    private static final String UNF = "User non trovato";
+    private static final String UNF = "User not found";
 
     private static final Logger logger = LoggerFactory.getLogger(LoginService.class);
 
@@ -42,7 +43,8 @@ public class LoginService {
             logger.error("User {} failed to create a new user, passwords do not match", user.getId());
             throw new PasswordDoNotMatchException("Passwords do not match");
         }
-        user.setRole(userDao.getUserRole(user.getUsername()));
+        String role = userDao.getUserRole(user.getUsername());
+        user.setRole(Objects.requireNonNullElse(role, Role.USER));
         if (!user.setPassword(user.getPassword())) {
             logger.error("User {} failed to create a new user, invalid password", user.getId());
             throw new PasswordNotValidException("Invalid password");
@@ -81,8 +83,13 @@ public class LoginService {
         return "Username updated successfully to " + newUsername;
     }
 
-    public String deleteUser(User user) throws LoginException {
-        currentUser = user;
+    public String deleteUser(String username) throws LoginException {
+        logger.info("username: {}, currentUser: {}", username, currentUser);
+        if (!Role.NULL.equals(username)) {
+            username = userDao.objectToUsername(username);
+            currentUser = userDao.findUser(username);
+        }
+        logger.info("username: {}, currentUser: {}", username, currentUser);
         if (currentUser == null) {
             logger.error("User failed to delete account, login required");
             throw new LoginException("Login required");
@@ -97,11 +104,14 @@ public class LoginService {
         return ret;
     }
 
-    public String login(User user) throws WrongPasswordException, UserNotFoundException {
+    public String login(User user) throws WrongPasswordException, UserNotFoundException, SuspendedUserException {
         if (user == null) {
             throw new UserNotFoundException(UNF);
         }
-        logger.info("User {} attempted login", user.getId());
+        if (userDao.isUserSuspended(user.getUsername())) {
+            logger.error("Suspended user {} attempted login", user.getId());
+            throw new SuspendedUserException("Suspended user");
+        }
         if (!userDao.containsUser(user)) {
             logger.error("User {} attempted login, user not found", user.getId());
             throw new UserNotFoundException(UNF);
@@ -136,13 +146,35 @@ public class LoginService {
         return "Password updated successfully";
     }
 
-    public String suspendUser(User user) throws LoginException {
-        if (user == null || !userDao.containsUser(user)) {
+    public String suspendUser(String username) throws LoginException, SuspendedUserException {
+        username = userDao.objectToUsername(username);
+        User user = userDao.findUser(username);
+        if (user == null) {
             logger.error("Admin failed to suspend user, user not found");
             throw new UserNotFoundException(UNF);
+        }
+        if (userDao.isUserSuspended(user.getUsername())) {
+            logger.error("Admin failed to suspend user, user already suspended");
+            throw new SuspendedUserException("User already suspended");
         }
         userDao.suspendUser(user);
         logger.info("User {} suspended", user.getId());
         return "User suspended successfully";
+    }
+
+    public String unsuspendUser(String username) throws UserNotFoundException, SuspendedUserException {
+        username = userDao.objectToUsername(username);
+        User user = userDao.findUser(username);
+        if (user == null) {
+            logger.error("Admin failed to unsuspend user, user not found");
+            throw new UserNotFoundException(UNF);
+        }
+        if (!userDao.isUserSuspended(user.getUsername())) {
+            logger.error("Admin failed to unsuspend user, user not suspended");
+            throw new SuspendedUserException("User not suspended");
+        }
+        userDao.unsuspendUser(user);
+        logger.info("User {} unsuspended", user.getId());
+        return "User unsuspended successfully";
     }
 }
