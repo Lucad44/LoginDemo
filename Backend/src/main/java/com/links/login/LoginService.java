@@ -1,6 +1,7 @@
 package com.links.login;
 
 import com.links.login.exceptions.*;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ public class LoginService {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginService.class);
 
+    @Setter
     private User currentUser = null;
 
     private final UserDao userDao;
@@ -84,12 +86,10 @@ public class LoginService {
     }
 
     public String deleteUser(String username) throws LoginException {
-        logger.info("username: {}, currentUser: {}", username, currentUser);
         if (!Role.NULL.equals(username)) {
             username = userDao.objectToUsername(username);
             currentUser = userDao.findUser(username);
         }
-        logger.info("username: {}, currentUser: {}", username, currentUser);
         if (currentUser == null) {
             logger.error("User failed to delete account, login required");
             throw new LoginException("Login required");

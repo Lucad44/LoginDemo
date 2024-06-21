@@ -3,19 +3,17 @@ function openPopup(popupId) {
 }
 
 function closePopup(popupId) {
+    clearResults(popupId);
     document.getElementById(popupId).style.display = 'none';
 }
 
 function clearResults(popupId) {
     if (popupId === 'suspendPopup') {
-        document.getElementById('suspendMessage').innerText = '';
-        document.getElementById('suspendUsername').value = '';
+        document.getElementById('suspendUsername').textContent = '';
     } else if (popupId === 'deletePopup') {
-        document.getElementById('deleteMessage').innerText = '';
-        document.getElementById('deleteUsername').value = '';
+        document.getElementById('deleteUsername').textContent = '';
     } else if (popupId === 'unsuspendPopup') {
-        document.getElementById('unsuspendMessage').innerText = '';
-        document.getElementById('unsuspendUsername').value = '';
+        document.getElementById('unsuspendUsername').textContent = '';
     }
 }
 
