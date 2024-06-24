@@ -7,8 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class LoginService {
@@ -91,8 +90,8 @@ public class LoginService {
             currentUser = userDao.findUser(username);
         }
         if (currentUser == null) {
-            logger.error("User failed to delete account, login required");
-            throw new LoginException("Login required");
+            logger.error("User failed to delete account");
+            throw new LoginException("Failed to delete account");
         }
         if (!userDao.removeUser(currentUser)) {
             logger.error("Attempted to remove non-existing user: {}", currentUser);
@@ -108,13 +107,13 @@ public class LoginService {
         if (user == null) {
             throw new UserNotFoundException(UNF);
         }
-        if (userDao.isUserSuspended(user.getUsername())) {
-            logger.error("Suspended user {} attempted login", user.getId());
-            throw new SuspendedUserException("Suspended user");
-        }
         if (!userDao.containsUser(user)) {
             logger.error("User {} attempted login, user not found", user.getId());
             throw new UserNotFoundException(UNF);
+        }
+        if (userDao.isUserSuspended(user.getUsername())) {
+            logger.error("Suspended user {} attempted login", user.getId());
+            throw new SuspendedUserException("Suspended user");
         }
         User storedUser = userDao.findUser(user.getUsername());
         if (!storedUser.passwordMatch(user)) {
@@ -176,5 +175,19 @@ public class LoginService {
         userDao.unsuspendUser(user);
         logger.info("User {} unsuspended", user.getId());
         return "User unsuspended successfully";
+    }
+
+    public Map<String, Float> getMaxScoreList() {
+        return userDao.getMaxScoreList();
+    }
+
+    public String setScore(int score) throws LoginException {
+        logger.info("User {} set score to {}", currentUser, score);
+        if (currentUser == null) {
+            logger.error("Failed to set score");
+            throw new LoginException("Failed to set score");
+        }
+        userDao.setScore(currentUser, score);
+        return currentUser + "'s score set to " + score;
     }
 }

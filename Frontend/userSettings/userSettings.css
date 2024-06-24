@@ -33,9 +33,10 @@ a {
     text-decoration: none;
 }
 
+/* Existing CSS - No changes needed */
 .top-left-button {
     position: absolute;
-    top: 20px;
+    top: 20px; /* Adjusted in inline style for back button */
     left: 20px;
     padding: 10px 20px;
     background-color: #131212;
@@ -49,6 +50,7 @@ a {
     background-color: #2a2a2c;
     transform: scale(1.05);
 }
+
 
 .login-container {
     width: 100%;

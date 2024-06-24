@@ -126,4 +126,28 @@ public class LoginController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @CrossOrigin(origins = "*")
+    @Operation(summary = "Get the max score of each user",
+            description = "Returns a list of the max score of each user")
+    @GetMapping("/leaderboard")
+    public ResponseEntity<Map<String, Float>> getMaxScoreList() {
+        try {
+            return ResponseEntity.ok(loginService.getMaxScoreList());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @CrossOrigin(origins = "*")
+    @Operation(summary = "Set the score of the current user",
+            description = "Returns a message indicating whether the score was set or not")
+    @PutMapping("/setScore")
+    public ResponseEntity<String> setScore(@RequestBody int score) {
+        try {
+            return ResponseEntity.ok(loginService.setScore(score));
+        } catch (CredentialsException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

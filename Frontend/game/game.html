@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flag Guessing Game</title>
+    <link rel="stylesheet" href="game.css">
+</head>
+<body>
+<div id="game-container">
+    <div id="timer">Tempo rimanente: <span id="time">60</span>s</div>
+    <div id="flag-container">
+        <img id="flag" src="" alt="Flag">
+        <div id="instructions">Seleziona il paese corretto:</div>
+        <div id="options-container">
+            <div class="options-column">
+                <button class="option-button" onclick="guess(0)"></button>
+                <button class="option-button" onclick="guess(1)"></button>
+                <button class="option-button" onclick="guess(2)"></button>
+            </div>
+            <div class="options-column">
+                <button class="option-button" onclick="guess(3)"></button>
+                <button class="option-button" onclick="guess(4)"></button>
+                <button class="option-button" onclick="guess(5)"></button>
+            </div>
+        </div>
+    </div>
+    <div id="score-container">Score: <span id="score">0</span></div>
+</div>
+<div id="final-score-popup" class="hidden">
+    <div id="final-score-content">
+        <span id="close-popup" onclick="closePopup()">&#10005;</span>
+        <h2>Game Over</h2>
+        <p>Il tuo punteggio finale è: <br><br><span id="final-score" style="font-size: 50px; font-style: bold">0</span></p>
+    </div>
+</div>
+<div id="floating-score"></div>
+<script src="game.js"></script>
+</body>
+</html>

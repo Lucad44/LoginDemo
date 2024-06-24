@@ -29,6 +29,9 @@ public class User {
     @Column(nullable = false)
     private boolean suspended = false;
 
+    @Column(name = "maxscore")
+    private float maxScore = 0.0f;
+
     public User(String username, String password) {
         this.username = username;
         setPassword(password);

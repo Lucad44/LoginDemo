@@ -5,12 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class UserDao {
     private final UserRepository userRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(UserDao.class);
 
     @Autowired
     public UserDao(UserRepository userRepository) {
@@ -52,10 +53,7 @@ public class UserDao {
     }
 
     public boolean containsUser(User user) {
-        if (user == null) {
-            return false;
-        }
-        return userRepository.findByUsername(user.getUsername()).isPresent();
+        return containsUser(user.getUsername());
     }
 
     public boolean containsUser(String username) {
@@ -97,5 +95,31 @@ public class UserDao {
 
     public String objectToUsername(String object) {
         return object.substring(13, object.length() - 2);
+    }
+
+    public Map<String, Float> getMaxScoreList() {
+        List<User> userList = getUserList();
+        HashMap<String, Float> scoreMap = new HashMap<>();
+        for (User user : userList) {
+            if (Role.ADMIN.equals(user.getRole())) {
+                continue;
+            }
+            scoreMap.put(user.getUsername(), user.getMaxScore());
+        }
+        List<Map.Entry<String, Float>> list = new LinkedList<>(scoreMap.entrySet());
+        list.sort(Map.Entry.<String, Float>comparingByValue().reversed());
+        LinkedHashMap<String, Float> sortedScoreMap = new LinkedHashMap<>();
+        for (Map.Entry<String, Float> entry : list) {
+            sortedScoreMap.put(entry.getKey(), entry.getValue());
+        }
+        return sortedScoreMap;
+    }
+
+    public void setScore(User user, float score) {
+        removeUser(user);
+        if (user != null) {
+            user.setMaxScore(score);
+            userRepository.save(user);
+        }
     }
 }
