@@ -8,14 +8,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+<a href="../../admin/admin.html" class="top-left-button"><</a>
 <div id="leaderboard-container">
     <h2>Leaderboard</h2>
+    <div id="controls">
+        <label for="sort-options">Sort by: </label>
+        <select id="sort-options">
+            <option value="score">Score</option>
+            <option value="time">Best Time</option>
+            <option value="username">Username</option>
+        </select>
+    </div>
     <div id="table-wrapper">
         <table id="leaderboard-table">
             <thead>
             <tr>
                 <th>Username</th>
                 <th>Score</th>
+                <th>Best Time</th>
             </tr>
             </thead>
             <tbody id="leaderboard-body"></tbody>

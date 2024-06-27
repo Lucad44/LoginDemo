@@ -1,0 +1,154 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.game-container {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.flag-container {
+    margin-bottom: 20px;
+}
+
+#flag {
+    width: 150px;
+    height: auto;
+    border: 5px solid #000000;
+    border-radius: 5px;
+}
+
+.map-container {
+    margin-bottom: 20px;
+}
+
+svg {
+    width: 500px;
+    height: auto;
+}
+
+.country {
+    fill: #ccc;
+    cursor: pointer;
+    stroke: black;
+    stroke-width: 2px;
+}
+
+.country:hover {
+    fill: lightcoral;
+}
+
+.selected {
+    fill: red !important;
+}
+
+.guessed {
+    fill: darkred !important;
+    pointer-events: none;
+}
+
+.correct-guesses {
+    font-size: 25px;
+    color: #308543;
+}
+
+.timer {
+    font-size: 25px;
+    color: #308543;
+}
+
+.timer-container {
+    font-size: 20px;
+    margin-top: 20px;
+}
+
+.timer-container p {
+    margin: 5px 0;
+}
+
+.confirmation-container {
+    margin-top: 20px;
+}
+
+#confirm-button {
+    font-size: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+#stop-button {
+    font-size: 20px;
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+#confirm-button.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+#popup h2 {
+    margin-top: 0;
+}
+
+#popup button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#popup button:hover {
+    background-color: #0056b3;
+}
+
+a {
+    text-decoration: none;
+}
+
+.top-left-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    background-color: #131212;
+    color: white;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+

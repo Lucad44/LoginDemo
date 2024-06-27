@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -22,4 +21,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u.suspended FROM User u WHERE u.username = :username")
     Boolean isUserSuspended(@Param("username") String username);
+
+    @Query("SELECT u.maxScore FROM User u WHERE u.username = :username")
+    float findMaxScoreByUsername(@Param("username") String username);
+
+    @Query("SELECT u.bestTime FROM User u WHERE u.username = :username")
+    int findBestTimeByUsername(String username);
 }

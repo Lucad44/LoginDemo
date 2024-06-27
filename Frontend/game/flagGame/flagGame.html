@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flag Guessing Game</title>
-    <link rel="stylesheet" href="game.css">
+    <link rel="stylesheet" href="flagGame.css">
 </head>
 <body>
+<a href="../../mainMenuPages/success.html" class="top-left-button"><</a>
 <div id="game-container">
     <div id="timer">Tempo rimanente: <span id="time">60</span>s</div>
     <div id="flag-container">
@@ -27,6 +28,12 @@
     </div>
     <div id="score-container">Score: <span id="score">0</span></div>
 </div>
+
+<div id="final-screen" class="hidden">
+    <h2>Final Score: <span id="final-score-display">0</span></h2>
+    <button id="play-again-button" onclick="playAgain()">Play Again</button>
+</div>
+
 <div id="final-score-popup" class="hidden">
     <div id="final-score-content">
         <span id="close-popup" onclick="closePopup()">&#10005;</span>
@@ -34,7 +41,8 @@
         <p>Il tuo punteggio finale è: <br><br><span id="final-score" style="font-size: 50px; font-style: bold">0</span></p>
     </div>
 </div>
+
 <div id="floating-score"></div>
-<script src="game.js"></script>
+<script src="flagGame.js"></script>
 </body>
 </html>

@@ -143,11 +143,35 @@ public class LoginController {
     @Operation(summary = "Set the score of the current user",
             description = "Returns a message indicating whether the score was set or not")
     @PutMapping("/setScore")
-    public ResponseEntity<String> setScore(@RequestBody int score) {
+    public ResponseEntity<String> setScore(@RequestBody float score) {
         try {
             return ResponseEntity.ok(loginService.setScore(score));
         } catch (CredentialsException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @CrossOrigin(origins = "*")
+    @Operation(summary = "Set the best time of the current user",
+            description = "Returns a message indicating whether the best time was set or not")
+    @PutMapping("/setBestTime")
+    public ResponseEntity<String> setBestTime(@RequestBody int time) {
+        try {
+            return ResponseEntity.ok(loginService.setBestTime(time));
+        } catch (CredentialsException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @CrossOrigin(origins = "*")
+    @Operation(summary = "Get the best time of each user",
+            description = "Returns a list of the best time of each user")
+    @GetMapping("/bestTime")
+    public ResponseEntity<Map<String, String>> getBestTimeList() {
+        try {
+            return ResponseEntity.ok(loginService.getBestTimeList());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
         }
     }
 }

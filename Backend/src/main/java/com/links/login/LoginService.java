@@ -181,13 +181,37 @@ public class LoginService {
         return userDao.getMaxScoreList();
     }
 
-    public String setScore(int score) throws LoginException {
+    public String setScore(float score) throws LoginException {
         logger.info("User {} set score to {}", currentUser, score);
         if (currentUser == null) {
             logger.error("Failed to set score");
             throw new LoginException("Failed to set score");
         }
+        float maxScore = userDao.getUserMaxScore(currentUser.getUsername());
+        if (score != 0 && score < maxScore) {
+            return "User " + currentUser + " already has a score of " + maxScore;
+        }
         userDao.setScore(currentUser, score);
+        logger.info("{}'s score has been set to {}", currentUser, score);
         return currentUser + "'s score set to " + score;
+    }
+
+    public String setBestTime(int time) throws LoginException {
+        logger.info("User {} set best time to {}", currentUser, time);
+        if (currentUser == null) {
+            logger.error("Failed to set best time");
+            throw new LoginException("Failed to set best time");
+        }
+        int bestTime = userDao.getUserBestTime(currentUser.getUsername());
+        if (time != 0 && time > bestTime) {
+            return "User " + currentUser + " already has a best time of " + bestTime;
+        }
+        userDao.setBestTime(currentUser, time);
+        logger.info("{}'s best time has been set to {}", currentUser, time);
+        return currentUser + "'s best time set to " + time;
+    }
+
+    public Map<String, String> getBestTimeList() {
+        return userDao.getBestTimeList();
     }
 }

@@ -1,7 +1,5 @@
 package com.links.login;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -10,8 +8,6 @@ import java.util.*;
 @Repository
 public class UserDao {
     private final UserRepository userRepository;
-
-    private static final Logger logger = LoggerFactory.getLogger(UserDao.class);
 
     @Autowired
     public UserDao(UserRepository userRepository) {
@@ -75,6 +71,14 @@ public class UserDao {
         return userRepository.findRoleByUsername(username);
     }
 
+    public float getUserMaxScore(String username) {
+        return userRepository.findMaxScoreByUsername(username);
+    }
+
+    public int getUserBestTime(String username) {
+        return userRepository.findBestTimeByUsername(username);
+    }
+
     public void suspendUser(User user) {
         if (user != null) {
             user.setSuspended(true);
@@ -115,10 +119,47 @@ public class UserDao {
         return sortedScoreMap;
     }
 
+    private String secondsToTime(int time) {
+        int minutes = time / 60;
+        int seconds = time % 60;
+        return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    public Map<String, String> getBestTimeList() {
+        List<User> userList = getUserList();
+        HashMap<String, Integer> timeMap = new HashMap<>();
+        for (User user : userList) {
+            if (Role.ADMIN.equals(user.getRole())) {
+                continue;
+            }
+            timeMap.put(user.getUsername(), user.getBestTime());
+        }
+        List<Map.Entry<String, Integer>> list = new LinkedList<>(timeMap.entrySet());
+        list.sort(Map.Entry.comparingByValue());
+        LinkedHashMap<String, String> sortedTimeMap = new LinkedHashMap<>();
+        for (Map.Entry<String, Integer> entry : list) {
+            int entryValue = entry.getValue();
+            if (entryValue == 0) {
+                sortedTimeMap.put(entry.getKey(), "N/A");
+            } else {
+                sortedTimeMap.put(entry.getKey(), secondsToTime(entry.getValue()));
+            }
+        }
+        return sortedTimeMap;
+    }
+
     public void setScore(User user, float score) {
         removeUser(user);
         if (user != null) {
             user.setMaxScore(score);
+            userRepository.save(user);
+        }
+    }
+
+    public void setBestTime(User user, int time) {
+        removeUser(user);
+        if (user != null) {
+            user.setBestTime(time);
             userRepository.save(user);
         }
     }
